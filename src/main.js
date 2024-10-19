@@ -1,5 +1,6 @@
 import { k } from "./kaplayCtx.js";
 import mainMenu from "./scenes/mainMenu.js";
+import game from "./scenes/game.js";
 
 k.loadSprite('chemical-bg', 'graphics/chemical-bg.png');
 k.loadSprite('platforms', 'graphics/platforms.png');
@@ -8,7 +9,7 @@ k.loadSprite('sonic', 'graphics/sonic.png',{
     sliceY: 2,
     anims:{
         run: {from: 0, to: 7, loop: true, speed: 30},
-        jump: {from: 8, to: 15,loop: false, speed: 100},
+        jump: {from: 8, to: 15,loop: true, speed: 100},
     }
 });
 k.loadSprite('motobug', 'graphics/motobug.png',{
@@ -36,9 +37,7 @@ k.loadSound('destroy','sounds/Destroy.wav');
 k.loadSound('hyper-ring','sounds/HyperRing.wav');
 
 k.scene('main-menu', mainMenu)
-k.scene('game', ()=>{
-    
-})
+k.scene('game', game)
 k.scene('gameover', ()=>{
     
 })
