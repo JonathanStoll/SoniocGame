@@ -4,6 +4,7 @@ import { makeSonic } from "../entities/sonic.js";
 import { k } from "../kaplayCtx.js";
 export default function game() {
     k.setGravity(3100)
+    const citySfx = k.play('city', {volume: 0.2})
     const bgPiceWith = 1920
     const bgPices = [
         k.add([k.sprite('chemical-bg'), k.pos(0, 0), k.scale(2), k.opacity(0.8), k.area()]),
@@ -40,7 +41,8 @@ const  controllText = k.add([
             return
         }
         k.play('hurt',{volume: 0.5})
-        k.go('gameover')
+        k.setData('current-score', score)
+        k.go('gameover', citySfx)
     })
 
     sonic.onCollide('ring', (ring)=>{

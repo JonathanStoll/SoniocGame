@@ -1,6 +1,7 @@
 import { k } from "./kaplayCtx.js";
 import mainMenu from "./scenes/mainMenu.js";
 import game from "./scenes/game.js";
+import gameover from "./scenes/gameover.js";
 
 k.loadSprite('chemical-bg', 'graphics/chemical-bg.png');
 k.loadSprite('platforms', 'graphics/platforms.png');
@@ -38,8 +39,6 @@ k.loadSound('hyper-ring','sounds/HyperRing.wav');
 
 k.scene('main-menu', mainMenu)
 k.scene('game', game)
-k.scene('gameover', ()=>{
-    
-})
+k.scene('gameover',gameover)
 
 k.go('main-menu');
