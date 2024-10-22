@@ -9,6 +9,7 @@ export function makeSonic(poc) {
         k.pos(poc),
         k.body({jumpForce: 1700}),
         {
+            ringCollector: null,
             setControlls (){
                 k.onButtonPress('jump', () => {
                     if(this.isGrounded()){
@@ -24,6 +25,12 @@ export function makeSonic(poc) {
                     })
             }
         }
+    ])
+    sonic.ringCollector =  sonic.add([
+        k.text('', {font: 'mania', size: 15}),
+        k.color(225,255,0),
+        k.anchor('center'),
+        k.pos(30, -10),
     ])
     return sonic
 }

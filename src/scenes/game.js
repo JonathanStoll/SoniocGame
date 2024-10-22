@@ -1,4 +1,5 @@
 import { makeMotobug } from "../entities/motobug.js";
+import { makering } from "../entities/ring.js";
 import { makeSonic } from "../entities/sonic.js";
 import { k } from "../kaplayCtx.js";
 export default function game() {
@@ -13,7 +14,14 @@ export default function game() {
         k.add([k.sprite('platforms'), k.pos(0, 450), k.scale(4), k.opacity(1)]),
         k.add([k.sprite('platforms'), k.pos(platformWith * 4, 450), k.scale(4), k.opacity(1)]),
     ]
+let score = 0
+let scoreMultiplier = 0
 
+
+const  controllText = k.add([
+    k.text('Score: 0',{font: 'mania',size: 50, color: 'white'}), 
+    k.pos(20,20),
+])
     const sonic = makeSonic(k.vec2(200, 745))
     sonic.setControlls()
     sonic.setEvent()
@@ -24,10 +32,27 @@ export default function game() {
             k.destroy(enemy)
             sonic.jump()
             k.play('jump', {volume: 0.5})
+            scoreMultiplier += 1
+            score += scoreMultiplier * 10
+             controllText.text = `Score: ${score}`
+           if(scoreMultiplier === 1) sonic.ringCollector.text = '+10'
+           if(scoreMultiplier > 1) sonic.ringCollector.text = `x${scoreMultiplier}`
             return
         }
         k.play('hurt',{volume: 0.5})
         k.go('gameover')
+    })
+
+    sonic.onCollide('ring', (ring)=>{
+        k.play('ring',{volume: 0.5})
+        k.destroy(ring)
+        score++
+        controllText.text = `Score: ${score}`
+        sonic.ringCollector.text = '+1'
+        k.wait(1,()=>{
+            sonic.ringCollector.text = ''
+        })
+        
     })
 
 
@@ -54,6 +79,25 @@ export default function game() {
     spawnMotoBug()
 
 
+    const spawnRings = () => {
+        const ring = makering(k.vec2(1950, 745))
+        ring.onUpdate(() => {
+            if (gameSpeed < 3000) {
+                ring.move(-(gameSpeed + 300), 0)
+                return
+            }
+            ring.move(-gameSpeed, 0)
+        })
+        ring.onExitScreen(() => {
+            if (ring.pos.x < 0) {
+                k.destroy(ring)
+            }
+        })
+        const waitTime = k.rand(0.5, 3)
+        k.wait(waitTime, spawnRings)
+    }
+    spawnRings()
+
     k.loop(1, () => {
         gameSpeed += 10
     })
@@ -67,6 +111,8 @@ export default function game() {
     ])
 
     k.onUpdate(() => {
+        if(sonic.isGrounded()) scoreMultiplier = 0
+
         if (bgPices[1].pos.x < 0) {
             bgPices[0].moveTo(bgPices[1].pos.x + bgPiceWith * 2, 0)
             bgPices.push(bgPices.shift())
